@@ -11,4 +11,6 @@ RUN curl -sSfL https://raw.githubusercontent.com/cosmtrek/air/master/install.sh 
 # run air command in the directory where our code will live
 WORKDIR /hackernew-scrap
 
+RUN go mod tidy
+
 CMD ["air"]
