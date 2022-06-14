@@ -6,7 +6,7 @@ import (
 
 type DBConfig struct {
 	Connection string `envconfig:"DB_CONNECTION" default:"postgres"`
-	Host       string `envconfig:"DB_HOST" default:"localhost"`
+	Host       string `envconfig:"DB_HOST" default:"postgres"`
 	Port       string `envconfig:"DB_PORT" default:"5432"`
 	User       string `envconfig:"DB_USER" default:"postgres"`
 	Password   string `envconfig:"DB_PASSWORD" default:"postgres"`
