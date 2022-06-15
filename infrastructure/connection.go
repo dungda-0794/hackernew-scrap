@@ -2,15 +2,17 @@ package infrastructure
 
 import (
 	"hackernew-scrap/configs"
+	"hackernew-scrap/core/errors"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
+// ConnectDatabase is function to connect postgresql
 func ConnectDatabase() (*gorm.DB, error) {
 	dBConfig, err := configs.NewDBConfig()
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err)
 	}
 
 	args := "host=" + dBConfig.Host +
@@ -22,8 +24,8 @@ func ConnectDatabase() (*gorm.DB, error) {
 
 	db, err := gorm.Open(postgres.Open(args), &gorm.Config{})
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err)
 	}
 
-	return db, err
+	return db, errors.Wrap(err)
 }

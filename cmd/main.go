@@ -8,6 +8,8 @@ import (
 
 func main() {
 
+	infrastructure.InitGloblalVariable()
+
 	newsRepository := newsRepository.NewRepsitory(infrastructure.DB)
 	_ = newsUsecase.NewNewsUsecase(newsRepository)
 
