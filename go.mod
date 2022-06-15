@@ -1,6 +1,6 @@
 module hackernew-scrap
 
-go 1.17
+go 1.18
 
 require (
 	github.com/kelseyhightower/envconfig v1.4.0
@@ -9,6 +9,8 @@ require (
 )
 
 require (
+	github.com/go-gormigrate/gormigrate/v2 v2.0.2 // indirect
+	github.com/google/uuid v1.3.0 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.12.1 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect

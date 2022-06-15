@@ -20,14 +20,20 @@ services:
       target: dev
     networks:
       - hackernew-scrap
-    ports:
-      - 8088:8088
     volumes:
       - .:/hackernew-scrap
     working_dir: /hackernew-scrap/cmd
     depends_on:
       - postgres
     command: air -c .air.toml
+    environment:
+      - DB_CONNECTION
+      - DB_HOST
+      - DB_PORT
+      - DB_USER
+      - DB_PASSWORD
+      - DB_DBNAME
+      - DB_SSLMODE
 volumes:
   postgres-data:
   hackernew-scrap:
