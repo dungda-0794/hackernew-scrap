@@ -12,6 +12,7 @@ func main() {
 
 	newsRepository := newsRepository.NewRepsitory(infrastructure.DB)
 	_ = newsUsecase.NewNewsUsecase(newsRepository)
+	newsUsecase.NewCronJob()
 
 	infrastructure.InfoLog.Println("run server")
 
