@@ -5,9 +5,5 @@ import (
 )
 
 func main() {
-	_, err := infrastructure.ConnectDatabase()
-	if err != nil {
-		infrastructure.ErrLog.Fatal(err)
-		return
-	}
+	infrastructure.InfoLog.Println("run server")
 }

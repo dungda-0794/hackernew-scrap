@@ -14,10 +14,10 @@ type DBConfig struct {
 	SSLMode    string `envconfig:"DB_SSLMODE" default:"disable"`
 }
 
-func NewDBConfig() (DBConfig, error) {
+func NewDBConfig() (*DBConfig, error) {
 	var dbconfig DBConfig
 
 	err := envconfig.Process("", &dbconfig)
 
-	return dbconfig, err
+	return &dbconfig, err
 }

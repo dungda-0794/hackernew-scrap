@@ -1,9 +1,11 @@
 package infrastructure
 
 import (
-	"gorm.io/gorm"
+	"hackernew-scrap/migration"
 	"log"
 	"os"
+
+	"gorm.io/gorm"
 )
 
 var (
@@ -18,4 +20,15 @@ var (
 func init() {
 	InfoLog = log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
 	ErrLog = log.New(os.Stdout, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
+
+	var err error
+	DB, err = ConnectDatabase()
+	if err != nil {
+		ErrLog.Fatal("fail to init db: ", err)
+	}
+
+	err = migration.Migration(DB)
+	if err != nil {
+		ErrLog.Fatal("fail to migration: ", err)
+	}
 }
