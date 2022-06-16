@@ -1,29 +1,18 @@
 package usecase
 
 import (
-	"encoding/json"
 	"fmt"
 	"hackernew-scrap/core/errors"
 	"hackernew-scrap/domain/scrap"
 	"hackernew-scrap/models"
-	"os"
-	"os/signal"
 	"sort"
 	"strconv"
 	"strings"
 
-	"github.com/gocolly/colly"
-	"github.com/kelseyhightower/envconfig"
-	"github.com/robfig/cron/v3"
-)
+	"hackernew-scrap/infrastructure"
 
-type CronExpression struct {
-	Minutes    string `envconfig:"CRON_MINUTES" default:"*"`
-	Hours      string `envconfig:"CRON_HOURS" default:"*"`
-	DayOfMonth string `envconfig:"CRON_DAY_OF_MONTH" default:"*"`
-	Month      string `envconfig:"CRON_MONTH" default:"*"`
-	DayOfWeek  string `envconfig:"CRON_DAY_OF_WEEK" default:"*"`
-}
+	"github.com/gocolly/colly"
+)
 
 type newsUsecase struct {
 	repository scrap.Repository
@@ -43,23 +32,8 @@ func (n *newsUsecase) CreateNews(news models.News) (*models.News, error) {
 	return result, nil
 }
 
-func NewCronJob() {
-	cronExpression := CronExpression{}
-
-	err := envconfig.Process("", &cronExpression)
-	if err != nil {
-		return
-	}
-	cronTime := fmt.Sprintf("%s %s %s %s %s", cronExpression.Minutes, cronExpression.Hours, cronExpression.DayOfMonth, cronExpression.Month, cronExpression.DayOfWeek)
-	c := cron.New()
-	c.AddFunc(cronTime, FetchData)
-	go c.Start()
-	sig := make(chan os.Signal)
-	signal.Notify(sig, os.Interrupt, os.Kill)
-	<-sig
-}
-
-func FetchData() {
+func (n *newsUsecase) FetchData() {
+	const url = "https://news.ycombinator.com"
 	articles := []models.News{}
 	c := colly.NewCollector()
 
@@ -84,21 +58,28 @@ func FetchData() {
 	})
 
 	c.OnRequest(func(r *colly.Request) {
-		fmt.Println("Visiting", r.URL)
+		infrastructure.InfoLog.Println("Visiting", r.URL)
 	})
 
-	c.Visit("https://news.ycombinator.com")
+	c.Visit(url)
 
 	sort.Slice(articles, func(i, j int) bool {
 		return articles[i].Point > articles[j].Point
 	})
 
-	// Convert results to JSON data if the scraping job has finished
-	jsonData, err := json.MarshalIndent(articles, "", "  ")
-	if err != nil {
-		panic(err)
+	for i := 0; i < len(articles); i++ {
+		result, err := n.repository.CheckExists(articles[i].IDExternal)
+		if err != nil {
+			infrastructure.ErrLog.Fatal("Fail to check exists", err)
+		}
+
+		if result == true {
+			continue
+		}
+
+		n.repository.Create(articles[i])
+		break
 	}
 
-	// Dump json to the standard output (can be redirected to a file)
-	fmt.Println(string(jsonData))
+	return
 }

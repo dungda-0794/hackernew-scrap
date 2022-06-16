@@ -6,4 +6,5 @@ import "hackernew-scrap/models"
 type Repository interface {
 	Create(news models.News) (*models.News, error)
 	Get(id string) (*models.News, error)
+	CheckExists(id string) (bool, error)
 }
