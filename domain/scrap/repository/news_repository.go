@@ -11,6 +11,7 @@ type repository struct {
 	DB *gorm.DB
 }
 
+// NewRepsitory return news repository
 func NewRepsitory(db *gorm.DB) scrap.Repository {
 	return &repository{DB: db}
 }
@@ -23,9 +24,10 @@ func (r *repository) Create(news models.News) (*models.News, error) {
 
 	return &news, nil
 }
-func (r *repository) Get(Id string) (*models.News, error) {
+
+func (r *repository) Get(id string) (*models.News, error) {
 	var news models.News
-	err := r.DB.Where("id_external = ?", Id).First(&news).Error
+	err := r.DB.Where("id_external = ?", id).First(&news).Error
 	if err != nil {
 		return nil, err
 	}
