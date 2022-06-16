@@ -1,15 +1,17 @@
 package models
 
 import (
+	"hackernew-scrap/core/errors"
 	"time"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
+// News is struct for news model.
 type News struct {
-	Id         string
-	IdExternal string `gorm:"index:idx_external_id,unique"`
+	ID         string
+	IDExternal string `gorm:"index:idx_external_id,unique"`
 	Title      string
 	Author     string
 	Link       string
@@ -18,13 +20,14 @@ type News struct {
 	UpdatedAt  *time.Time
 }
 
-func (n *News) BeforeCreate(tx *gorm.DB) (err error) {
+// BeforeCreate is hook executed berfore create record .
+func (n *News) BeforeCreate(tx *gorm.DB) error {
 	id, err := uuid.NewUUID()
 	if err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
-	n.Id = id.String()
+	n.ID = id.String()
 
-	return
+	return nil
 }

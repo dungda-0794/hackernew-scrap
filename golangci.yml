@@ -1,0 +1,56 @@
+linters:
+  enable-all: true
+  disable:
+    - maligned
+    - dupl
+    - wsl
+    - godox
+    - stylecheck
+    - gci
+    - godot
+    - exhaustivestruct
+    - exhaustruct
+    - ireturn
+    - varnamelen
+    - gochecknoglobals
+    - golint
+    - interfacer
+    - scopelint
+    - bodyclose
+    - contextcheck
+    - nilerr
+    - noctx
+    - rowserrcheck
+    - sqlclosecheck
+    - structcheck
+    - tparallel
+    - unparam
+    - wastedassign
+  disable-all: false
+
+output:
+  print-issued-lines: false
+
+linters-settings:
+  funlen:
+    lines: 270
+    statements: 50
+  gocognit:
+    # minimal code complexity to report, 30 by default (but we recommend 10-20)
+    min-complexity: 35
+
+run:
+  skip-dirs:
+    - cmd
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - scopelint
+        - funlen
+        - gocognit
+        - gosec
+        - gochecknoinits
+        - errcheck 
+  exclude-use-default: false

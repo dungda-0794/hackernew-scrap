@@ -9,15 +9,17 @@ import (
 )
 
 var (
-	//logger
+	// InfoLog are global variable for log stdout
 	InfoLog *log.Logger
-	ErrLog  *log.Logger
+	// ErrLog are global variable for log stdout
+	ErrLog *log.Logger
 
-	//database
+	// DB are global variable for connection database
 	DB *gorm.DB
 )
 
-func init() {
+// InitGloblalVariable is function to init varable to run server
+func InitGloblalVariable() {
 	InfoLog = log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
 	ErrLog = log.New(os.Stdout, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
 

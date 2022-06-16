@@ -1,9 +1,12 @@
 package configs
 
 import (
+	"hackernew-scrap/core/errors"
+
 	"github.com/kelseyhightower/envconfig"
 )
 
+// DBConfig struct for config database.
 type DBConfig struct {
 	Connection string `envconfig:"DB_CONNECTION" default:"postgres"`
 	Host       string `envconfig:"DB_HOST" default:"postgres"`
@@ -14,10 +17,11 @@ type DBConfig struct {
 	SSLMode    string `envconfig:"DB_SSLMODE" default:"disable"`
 }
 
+// NewDBConfig return config for database.
 func NewDBConfig() (*DBConfig, error) {
 	var dbconfig DBConfig
 
 	err := envconfig.Process("", &dbconfig)
 
-	return &dbconfig, err
+	return &dbconfig, errors.Wrap(err)
 }
