@@ -41,9 +41,12 @@ func (e *coreError) Unwrap() error {
 // Wrap is constructor to wrap error object.
 func Wrap(err error) error {
 	const skip = 1
-
-	return &coreError{
-		err:   err,
-		frame: xerrors.Caller(skip),
+	if err != nil {
+		return &coreError{
+			err:   err,
+			frame: xerrors.Caller(skip),
+		}
 	}
+
+	return nil
 }

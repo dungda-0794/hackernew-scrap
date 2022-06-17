@@ -34,6 +34,13 @@ services:
       - DB_PASSWORD
       - DB_DBNAME
       - DB_SSLMODE
+      - CRON_MINUTES
+      - CRON_HOURS
+      - CRON_DAY_OF_MONTH
+      - CRON_MONTH
+      - CRON_DAY_OF_WEEK
+      - SLACK_CHANNEL_ID
+      - SLACK_API_URL
 volumes:
   postgres-data:
   hackernew-scrap:

@@ -3,16 +3,17 @@ module hackernew-scrap
 go 1.18
 
 require (
+	github.com/go-gormigrate/gormigrate/v2 v2.0.2
 	github.com/gocolly/colly v1.2.0
+	github.com/google/uuid v1.3.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/robfig/cron/v3 v3.0.1
+	github.com/slack-go/slack v0.11.0
 	gorm.io/driver/postgres v1.3.7
 	gorm.io/gorm v1.23.5
 )
 
 require (
-	github.com/go-gormigrate/gormigrate/v2 v2.0.2 // indirect
-	github.com/google/uuid v1.3.0 // indirect
 	github.com/PuerkitoBio/goquery v1.8.0 // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/antchfx/htmlquery v1.2.5 // indirect
@@ -21,6 +22,7 @@ require (
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/protobuf v1.3.1 // indirect
+	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.12.1 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect

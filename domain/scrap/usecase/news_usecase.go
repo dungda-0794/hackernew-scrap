@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"hackernew-scrap/core/errors"
 	"hackernew-scrap/domain/scrap"
+	"hackernew-scrap/external"
+	"hackernew-scrap/infrastructure"
 	"hackernew-scrap/models"
 	"sort"
 	"strconv"
 	"strings"
-
-	"hackernew-scrap/infrastructure"
 
 	"github.com/gocolly/colly"
 )
@@ -61,7 +61,10 @@ func (n *newsUsecase) FetchData() {
 		infrastructure.InfoLog.Println("Visiting", r.URL)
 	})
 
-	c.Visit(url)
+	err := c.Visit(url)
+	if err != nil {
+		infrastructure.ErrLog.Fatal("Fail to scrap", err)
+	}
 
 	sort.Slice(articles, func(i, j int) bool {
 		return articles[i].Point > articles[j].Point
@@ -73,13 +76,17 @@ func (n *newsUsecase) FetchData() {
 			infrastructure.ErrLog.Fatal("Fail to check exists", err)
 		}
 
-		if result == true {
+		if result {
 			continue
 		}
 
-		n.repository.Create(articles[i])
+		_, err = n.repository.Create(articles[i])
+		if err != nil {
+			infrastructure.ErrLog.Fatal("Fail to create article", err)
+		}
+		// configs.NewSlackConfig(articles[i].Title, articles[i].Link)
+		external.PostMessage(articles[i].Title, articles[i].Link)
+
 		break
 	}
-
-	return
 }
