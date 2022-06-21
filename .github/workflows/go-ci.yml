@@ -20,4 +20,16 @@ jobs:
       with:
         version: latest
         args: --config=./golangci.yml --timeout=10m
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.18
+
+      - name: run build
+        run: |
+          mkdir -p dist
+          GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o dist/server ./cmd/main.go 
