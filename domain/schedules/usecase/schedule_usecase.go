@@ -1,7 +1,8 @@
-package schedule
+package usecase
 
 import (
 	"fmt"
+	"hackernew-scrap/domain/schedules"
 	"hackernew-scrap/domain/scrap"
 	"hackernew-scrap/infrastructure"
 	"os"
@@ -20,16 +21,16 @@ type cronExpression struct {
 	DayOfWeek  string `envconfig:"CRON_DAY_OF_WEEK" default:"*"`
 }
 
-type newsSchedule struct {
+type scheduleUsecase struct {
 	usecase scrap.NewsUsecase
 }
 
-// NewNewsSchedule for create news schedule
-func NewNewsSchedule(us scrap.NewsUsecase) scrap.NewsSchedule {
-	return &newsSchedule{usecase: us}
+// NewScheduleUsecase for create schedule
+func NewScheduleUsecase(us scrap.NewsUsecase) schedules.ScheduleUsecase {
+	return &scheduleUsecase{usecase: us}
 }
 
-func (schedule *newsSchedule) CronJob() {
+func (schedule *scheduleUsecase) CronJob() {
 	cronExpression := cronExpression{}
 	err := envconfig.Process("CRON", &cronExpression)
 	if err != nil {
@@ -42,7 +43,12 @@ func (schedule *newsSchedule) CronJob() {
 		cronExpression.Month,
 		cronExpression.DayOfWeek)
 	c := cron.New()
-	_, err = c.AddFunc(cronTime, schedule.usecase.FetchData)
+	_, err = c.AddFunc(cronTime, func() {
+		_, err := schedule.usecase.FetchData()
+		if err != nil {
+			infrastructure.ErrLog.Fatal("Fail to FetchData ", err)
+		}
+	})
 	if err != nil {
 		infrastructure.ErrLog.Fatal("Fail to add func ", err)
 	}

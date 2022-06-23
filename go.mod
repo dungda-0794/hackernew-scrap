@@ -14,6 +14,15 @@ require (
 )
 
 require (
+	github.com/labstack/gommon v0.3.1 // indirect
+	github.com/mattn/go-colorable v0.1.11 // indirect
+	github.com/mattn/go-isatty v0.0.14 // indirect
+	github.com/valyala/bytebufferpool v1.0.0 // indirect
+	github.com/valyala/fasttemplate v1.2.1 // indirect
+	golang.org/x/sys v0.0.0-20211103235746-7861aae1554b // indirect
+)
+
+require (
 	github.com/PuerkitoBio/goquery v1.8.0 // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/antchfx/htmlquery v1.2.5 // indirect
@@ -34,6 +43,7 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/kennygrant/sanitize v1.2.4 // indirect
+	github.com/labstack/echo v3.3.10+incompatible
 	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca // indirect
 	github.com/temoto/robotstxt v1.1.2 // indirect
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 // indirect

@@ -32,7 +32,7 @@ func (n *newsUsecase) CreateNews(news models.News) (*models.News, error) {
 	return result, nil
 }
 
-func (n *newsUsecase) FetchData() {
+func (n *newsUsecase) FetchData() (bool, error) {
 	const url = "https://news.ycombinator.com"
 	articles := []models.News{}
 	c := colly.NewCollector()
@@ -63,7 +63,7 @@ func (n *newsUsecase) FetchData() {
 
 	err := c.Visit(url)
 	if err != nil {
-		infrastructure.ErrLog.Fatal("Fail to scrap", err)
+		return false, errors.Wrap(err)
 	}
 
 	sort.Slice(articles, func(i, j int) bool {
@@ -73,7 +73,7 @@ func (n *newsUsecase) FetchData() {
 	for i := 0; i < len(articles); i++ {
 		result, err := n.repository.CheckExists(articles[i].IDExternal)
 		if err != nil {
-			infrastructure.ErrLog.Fatal("Fail to check exists", err)
+			return false, errors.Wrap(err)
 		}
 
 		if result {
@@ -82,11 +82,13 @@ func (n *newsUsecase) FetchData() {
 
 		_, err = n.repository.Create(articles[i])
 		if err != nil {
-			infrastructure.ErrLog.Fatal("Fail to create article", err)
+			return false, errors.Wrap(err)
 		}
 		// configs.NewSlackConfig(articles[i].Title, articles[i].Link)
 		external.PostMessage(articles[i].Title, articles[i].Link)
 
 		break
 	}
+
+	return true, nil
 }
