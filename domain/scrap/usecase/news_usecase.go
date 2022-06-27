@@ -7,6 +7,7 @@ import (
 	"hackernew-scrap/external"
 	"hackernew-scrap/infrastructure"
 	"hackernew-scrap/models"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -42,7 +43,13 @@ func (n *newsUsecase) FetchData() {
 		e.ForEach("tr.athing", func(i int, el *colly.HTMLElement) {
 			temp := models.News{}
 			temp.Title = el.ChildText(".titlelink")
-			temp.Link = el.ChildAttr(".titlelink", "href")
+			tempLink := el.ChildAttr(".titlelink", "href")
+			match, _ := regexp.MatchString("^(http)", tempLink)
+			if match {
+				temp.Link = tempLink
+			} else {
+				temp.Link = fmt.Sprintf("%s/%s", url, tempLink)
+			}
 			temp.IDExternal = el.Attr("id")
 			infoSelector := fmt.Sprintf("tr:nth-child(%d)", (i+1)*3-1)
 			info := strings.Split(e.ChildText(infoSelector), " ")
