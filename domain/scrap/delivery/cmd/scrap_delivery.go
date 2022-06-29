@@ -1,30 +1,29 @@
 package delivery
 
 import (
+	"context"
 	"hackernew-scrap/domain/scrap"
-	"net/http"
-
-	"github.com/labstack/echo"
+	"hackernew-scrap/domain/scrap/delivery/cmd/pb"
 )
 
-// NewsHandler  represent the httphandler for article
+// NewsHandler represent the httphandler for article
 type NewsHandler struct {
 	AUsecase scrap.NewsUsecase
+	pb.UnimplementedScrapPBServer
 }
 
-// NewNewsHandler will initialize the articles/ resources endpoint
-func NewNewsHandler(e *echo.Echo, us scrap.NewsUsecase) {
-	handler := &NewsHandler{
+func NewNewsHandler(us scrap.NewsUsecase) *NewsHandler {
+	s := &NewsHandler{
 		AUsecase: us,
 	}
-	e.GET("/articles", handler.SendNews)
+	return s
 }
 
-// SendNews will send article to slack
-func (a *NewsHandler) SendNews(c echo.Context) error {
+// SendNotify will send article to slack
+func (a *NewsHandler) SendNotify(ctx context.Context, in *pb.SendNotifyRequest) (*pb.SendNotifyResponse, error) {
 	res, err := a.AUsecase.FetchData()
-	if err != nil || !res {
-		return c.JSON(http.StatusBadRequest, map[string]string{"status": "fail"})
+	if err != nil {
+		return &pb.SendNotifyResponse{Success: false}, err
 	}
-	return c.JSON(http.StatusOK, map[string]string{"status": "ok"})
+	return &pb.SendNotifyResponse{Success: res}, nil
 }
