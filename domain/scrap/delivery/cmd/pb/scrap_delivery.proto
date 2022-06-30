@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option go_package = "hackernew-scrap/domain/scrap/delivery/cmd/pb";
+package delivery;
+
+message SendNotifyRequest {}
+
+message SendNotifyResponse {
+    bool Success = 1;
+}
+
+service ScrapPB {
+    rpc SendNotify(SendNotifyRequest) returns (SendNotifyResponse) {}
+}

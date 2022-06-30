@@ -27,6 +27,7 @@ services:
       - postgres
     command: air -c .air.toml
     environment:
+      - SERVER_PORT
       - DB_CONNECTION
       - DB_HOST
       - DB_PORT
@@ -41,6 +42,8 @@ services:
       - CRON_DAY_OF_WEEK
       - SLACK_CHANNEL_ID
       - SLACK_API_URL
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
 volumes:
   postgres-data:
   hackernew-scrap:
